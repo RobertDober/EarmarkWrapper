@@ -25,7 +25,7 @@ defmodule EarmarkWrapper.Options do
   }
   @type positional_args_t :: OptionParser.argv()
   @type parsed_t :: {t(), positional_args_t()}
-  @type result_t :: either(parsed_t())
+  @type result_t :: either(t())
 
 
   @spec parse(list(String.t)) :: result_t()
@@ -64,7 +64,7 @@ defmodule EarmarkWrapper.Options do
     {:error, "Illegal options #{inspect errors}"}
   end
 
-  @spec from_options(OptionParse.parsed, t())::t()
+  @spec from_options(OptionParser.parsed, t())::t()
   defp from_options(options, result)
   defp from_options([], result), do: result
   defp from_options([{key, value}|rest], result), do: from_options(rest, %{result | key => value})

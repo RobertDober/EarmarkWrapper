@@ -10,9 +10,10 @@ defmodule EarmarkWrapper do
 
   @spec main(list(String.t)) :: status()
   def main(args) do
-    args
-    |> Options.parse
-    |> Runner.run
+    case Options.parse(args) do
+      {:ok, options} -> Runner.run(options)
+      _              -> :error
+    end
   end
   @doc """
   Hello world.
