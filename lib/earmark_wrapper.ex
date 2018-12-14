@@ -11,8 +11,8 @@ defmodule EarmarkWrapper do
   @spec main(list(String.t)) :: status()
   def main(args) do
     case Options.parse(args) do
-      {:ok, options} -> Runner.run(options)
-      _              -> :error
+      %{errors: []} = options -> Runner.run(options)
+      _                       -> :error
     end
   end
   @doc """

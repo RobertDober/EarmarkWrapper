@@ -1,19 +1,23 @@
 defmodule EarmarkWrapper.Options do
   use EarmarkWrapper.Types
 
+  alias EarmarkWrapper.EarmarkOptions
+
   defstruct \
-    earmark_options: %{},
-    help: false,
-    html5: true,
-    input: [],
-    javascript: nil,
-    lang: "en",
-    stylesheet: nil,
-    title: nil,
-    version: false
+  earmark_options: %{},
+  errors: [],
+  help: false,
+  html5: true,
+  input: [],
+  javascript: nil,
+  lang: "en",
+  stylesheet: nil,
+  title: nil,
+  version: false
 
   @type t :: %__MODULE__{
     earmark_options: keywd_map(),
+    errors: list(String.t),
     help: boolean(),
     html5: boolean(),
     input: list(String.t),
@@ -28,11 +32,13 @@ defmodule EarmarkWrapper.Options do
   @type result_t :: either(t())
 
 
-  @spec parse(list(String.t)) :: result_t()
+  @spec parse(list(String.t)) :: t()
   def parse args do
     OptionParser.parse(args, strict: switches(), aliases: aliases())
     |> transform()
   end
+
+
   # For OptionParser
   #--------------------------------
 
@@ -43,7 +49,7 @@ defmodule EarmarkWrapper.Options do
   defp switches do
     # Lots of duplication here
     [
-      earmark_options: :string, # Needs parsing
+      earmark_options: :string,
       help: :boolean,
       html5: :boolean,
       javascript: :string,
@@ -54,21 +60,36 @@ defmodule EarmarkWrapper.Options do
     ]
   end
 
-  @spec transform( parsed_options_t() ) :: result_t()
-  defp transform parsed_options
-  defp transform( {options, positional, []}=x ) do
-    myself = from_options(options, %__MODULE__{input: positional})
-    {:ok, myself}
+
+  # Postprocessing
+  # --------------------------------
+
+  @spec transform( parsed_options_t()) :: t()
+  defp transform( parsed_options )
+  defp transform( {options, positional, []} ) do
+    _transform(options, %__MODULE__{input: positional})
   end
   defp transform( {_, _, errors} ) do
-    {:error, "Illegal options #{inspect errors}"}
+    %__MODULE__{errors: errors}
   end
 
-  @spec from_options(OptionParser.parsed, t())::t()
-  defp from_options(options, result)
-  defp from_options([], result), do: result
-  defp from_options([{key, value}|rest], result), do: from_options(rest, %{result | key => value})
+  @spec _transform(OptionParser.parsed, t()) :: t()
+  defp _transform(options, result) do
+    options
+    |> Enum.reduce(result, &_update/2)
+  end
 
+  @spec _update({atom(), String.t}, t()) :: t()
+  defp _update(keyvalpair, result)
+  defp _update({:earmark_options, earmark_options}, result) do
+    case EarmarkOptions.parse(earmark_options) do
+      {:ok, earmark_options1} -> %{result | earmark_options: earmark_options1}
+      {:error, message}       -> %{result | earmark_options: %Earmark.Options{}, errors: [message | result.errors]}
+    end
+  end
+  defp _update({k, v}, result) do
+    %{result | k => v}
+  end
 
 
 end
