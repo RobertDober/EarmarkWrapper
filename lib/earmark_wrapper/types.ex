@@ -3,6 +3,8 @@ defmodule EarmarkWrapper.Types do
   defmacro __using__( _options) do
     quote do
 
+      # TODO: As soon as Earmark types `Earmark.as_html` use its return type instead
+      @type earmark_return_t :: { status(), String.t, Earmark.Message.ts }
       @type either(t) :: {:ok, t} | {:error, String.t}
 
       @type keywd_map() :: %{atom() => any()}

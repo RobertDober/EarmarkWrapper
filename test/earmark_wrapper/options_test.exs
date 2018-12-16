@@ -23,7 +23,7 @@ defmodule EarmarkWrapper.OptionsTest do
 
   describe "parameters" do
     [
-      { %{help: true}, "--help"},
+      { %{help: true, earmark_options: %EO{}}, "--help"},
       { %{help: true}, "-h"},
       { %{version: true}, "--version"},
       { %{version: true}, "-v"},

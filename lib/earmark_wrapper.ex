@@ -15,16 +15,4 @@ defmodule EarmarkWrapper do
       _                       -> :error
     end
   end
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> EarmarkWrapper.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end

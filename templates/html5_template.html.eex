@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="<%= options.lang %>">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= if options.title do %>
+      <title>%= options.title %></title>
+    <% end %>
+    <%= if options.stylesheet do %>
+      <link rel="stylesheet" href="<%= options.stylesheet %>"/>
+    <% end %>
+  </head>
+  <body>
+    <%= html %>
+    <%= if options.javascript do %>
+      <script src="<%= options.javascript %>"/>
+    <% end %>
+  </body>
+</html>

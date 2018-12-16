@@ -4,7 +4,7 @@ defmodule EarmarkWrapper.Options do
   alias EarmarkWrapper.EarmarkOptions
 
   defstruct \
-  earmark_options: %{},
+  earmark_options: %Earmark.Options{},
   errors: [],
   help: false,
   html5: true,
@@ -16,7 +16,7 @@ defmodule EarmarkWrapper.Options do
   version: false
 
   @type t :: %__MODULE__{
-    earmark_options: keywd_map(),
+    earmark_options: Earmark.Options.t,
     errors: list(String.t),
     help: boolean(),
     html5: boolean(),
